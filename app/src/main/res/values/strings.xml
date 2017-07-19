@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">WidgetXpress</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
+    <string name="texto_creador">Nombre</string>
+    <string name="actividad">Aplicar cambios</string>
+    <string name="fecha_inicio">Feb 14th</string>
+</resources>
