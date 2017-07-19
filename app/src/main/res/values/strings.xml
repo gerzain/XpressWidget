@@ -5,4 +5,20 @@
     <string name="texto_creador">Nombre</string>
     <string name="actividad">Aplicar cambios</string>
     <string name="fecha_inicio">Feb 14th</string>
+    <string name="descripcionlogin">login</string>
+    <string name="agregar">agregar</string>
+    <string name="empty_string">No hay actividades</string>
+    <string name="realizar">¿Qué hay que hacer?</string>
+    <string name="not_log_in">Error al iniciar sesión</string>
+    <string name="not_close_session">Error al  cerrar sesión</string>
+    <string name="fechainicio">FechaInicio</string>
+    <string name="fechatermino">FechaTermino</string>
+    <string name="recordatorio">Hora</string>
+    <string name="desactivado">OFF</string>
+    <string name="accion_cancelar">Cancelar</string>
+    <string name="accion_aceptar">Agregar</string>
+    <string name="nueva_actividad">Agregar</string>
+    <string name="nombre_actividad">Introduce tarea</string>
+    <string name="icono_fecha">fecha_tarea</string>
+    <string name="fecha_sin_fijar">Fecha sin fijar</string>
 </resources>
