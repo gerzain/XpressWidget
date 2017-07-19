@@ -17,6 +17,68 @@
         <item name="android:textAppearance">@style/TextAppearance.AppCompat.Headline</item>
         <item name="android:textColor">#1b1a1a</item>
     </style>
+    <style name="EditLinearStyle">
+        <item name="android:paddingRight">@dimen/editar_actividad_padding</item>
+        <item name="android:paddingLeft">@dimen/editar_actividad_padding</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:orientation">vertical</item>
 
-    <string name="empty_string">Inicia sesión</string>
+    </style>
+    <style name="EditHabitNameForm" parent="EditLinearStyle">
+        <item name="android:paddingLeft">@dimen/editar_actividad_padding</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:paddingRight">@dimen/padding_medium</item>
+
+    </style>
+    <style name="EditLabelStyle">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:paddingTop">@dimen/default_padding</item>
+        <item name="android:textColor">@color/colorAccent</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textAppearance">?android:textAppearanceSmall</item>
+    </style>
+    <style name="EditRelativeStyle">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">2</item>
+        <item name="android:paddingLeft">4dp</item>
+    </style>
+
+    <style name="FormInput">
+        <item name="android:layout_gravity">center_vertical|end</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:background">?android:attr/selectableItemBackground</item>
+    </style>
+    <style name="FormSpinner" parent="@style/Widget.AppCompat.Spinner">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">2</item>
+    </style>
+    <style name="ReminderTextView" parent="FormSpinner">
+        <item name="android:paddingLeft">4dp</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/primary_text</item>
+    </style>
+    <style name="ButtonAppTheme" parent="android:Widget.Button">
+        <item name="android:background">@color/colorPrimary</item>
+        <item name="android:minHeight">48dip</item>
+        <item name="android:minWidth">64dip</item>
+        <item name="android:textColor">#000000</item>
+    </style>
+    <style name="EditTextStyle">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_weight">2</item>
+        <item name="android:fontFamily">sans-serif-condensed</item>
+        <item name="android:inputType">textCapSentences</item>
+        <item name="android:textAppearance">?android:textAppearanceMedium</item>
+    </style>
+
 </resources>
