@@ -3,11 +3,16 @@
     android:layout_height="match_parent"
     android:layout_margin="@dimen/widget_margin">
 
+    <TextView
+        android:id="@+id/empty_view"
+        style="@style/EmptyView" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#dedfde"
         android:orientation="vertical">
+
         <LinearLayout
             android:id="@+id/widget_layout_main"
             android:layout_width="match_parent"
@@ -16,33 +21,60 @@
             android:orientation="horizontal"
             android:paddingLeft="5dp"
             android:paddingRight="5dp">
+
             <ImageView
                 android:id="@+id/widget_img_launcher"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:layout_gravity="center_vertical"
-                android:src="@mipmap/ic_launcher"/>
+                android:src="@mipmap/ic_launcher" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/app_name"
                 android:layout_gravity="center_vertical"
-                android:textColor="@android:color/black"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textStyle="bold"
-                android:paddingStart="@dimen/widget_header_padding"
-                android:paddingLeft="@dimen/widget_header_padding"
                 android:paddingEnd="@dimen/widget_header_padding"
-                android:paddingRight="@dimen/widget_header_padding"/>
+                android:paddingLeft="@dimen/widget_header_padding"
+                android:paddingRight="@dimen/widget_header_padding"
+                android:paddingStart="@dimen/widget_header_padding"
+                android:text="@string/app_name"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@color/texto_header"
+                android:textStyle="bold" />
+
+            <ImageButton
+                android:id="@+id/btn_login"
+                android:layout_width="35sp"
+                android:layout_height="35sp"
+                android:layout_marginStart="50sp"
+                android:background="@drawable/boton_circular"
+                android:contentDescription="@string/descripcionlogin"
+                android:gravity="center_vertical|end"
+                android:src="@drawable/ic_google" />
+
+            <ImageButton
+                android:id="@+id/btn_agregar"
+                android:layout_width="40sp"
+                android:layout_height="40sp"
+                android:layout_marginStart="20sp"
+                android:background="@drawable/boton_circular"
+                android:contentDescription="@string/agregar"
+                android:src="@drawable/ic_add_circle" />
+
+            <ImageButton
+                android:id="@+id/btn_logout"
+                android:layout_width="40sp"
+                android:layout_height="40sp"
+                android:background="@drawable/boton_circular"
+                android:src="@drawable/ic_account_circle" />
         </LinearLayout>
+
         <ListView
             android:id="@+id/widget_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+
         </ListView>
     </LinearLayout>
-    <TextView
-        android:id="@+id/empty_view"
-        style="@style/EmptyView" />
 
 </FrameLayout>
