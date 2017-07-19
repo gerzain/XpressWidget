@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!--Inicia  Actividad-->
+    <LinearLayout
+        android:id="@+id/nombre_actividad"
+        style="@style/EditHabitNameForm"
+        android:paddingTop="@dimen/editar_actividad_padding">
+
+        <TextView
+            style="@style/EditLabelStyle"
+            android:layout_weight="2.5"
+            android:text="@string/realizar"
+            />
+        <EditText
+            style="@style/EditTextStyle"
+            android:layout_weight="4"
+            android:id="@+id/edit_actividad"
+            android:hint="@string/nombre_actividad" >
+            <requestFocus/>
+
+        </EditText>
+
+    </LinearLayout>
+    <!-- Termina Actividad -->
+
+    <!--Fecha de Inicio-->
+
+    <LinearLayout
+        android:id="@+id/contenedor_fecha_inicio"
+        style="@style/EditHabitNameForm"
+        android:paddingTop="@dimen/editar_actividad_padding">
+
+        <TextView
+            android:id="@+id/tv_fecha_inicio"
+            android:layout_weight="2.5"
+            style="@style/EditLabelStyle"
+            android:text="@string/fechainicio" />
+
+        <EditText
+            android:id="@+id/edit_fecha_inicio"
+            android:layout_weight="4"
+            android:inputType="datetime"
+            android:hint="@string/fecha_sin_fijar"
+            style="@style/EditTextStyle" />
+
+        <ImageButton
+            android:id="@+id/btnFechaInicio"
+            style="@style/FormInput"
+            android:contentDescription="@string/icono_fecha"
+            android:src="@drawable/ic_event" />
+
+        </LinearLayout>
+
+    <!--Termina FechaInicio-->
+
+    <!--Fecha Termino -->
+    <LinearLayout
+        android:id="@+id/contenedor_fecha_termino"
+        style="@style/EditHabitNameForm"
+        android:paddingTop="@dimen/editar_actividad_padding">
+
+        <TextView
+            android:id="@+id/tv_fecha_termino"
+            android:layout_weight="2.5"
+            style="@style/EditLabelStyle"
+            android:text="@string/fechatermino" />
+
+        <EditText
+            android:id="@+id/edit_fecha_termino"
+            android:layout_weight="4"
+            android:hint="@string/fecha_sin_fijar"
+            android:inputType="datetime"
+            style="@style/EditTextStyle" />
+
+        <ImageButton
+            android:id="@+id/btnfecha_termino"
+            style="@style/FormInput"
+            android:contentDescription="@string/icono_fecha"
+            android:src="@drawable/ic_event" />
+
+
+    </LinearLayout>
+    <!-- Termina Fecha Termino -->
+
+    <LinearLayout
+        android:id="@+id/container_reminder"
+        style="@style/EditHabitNameForm"
+        android:paddingTop="@dimen/editar_actividad_padding">
+
+        <TextView
+            style="@style/EditLabelStyle"
+            android:text="@string/recordatorio" />
+
+        <TextView
+            android:id="@+id/tv_reminder_time"
+            style="@style/ReminderTextView"
+            android:text="@string/desactivado" />
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/bottom_bar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_alignParentBottom="true"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/boton_cancelar_nuevo"
+            style="@style/Widget.AppCompat.Button.Borderless.Colored"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAllCaps="false"
+            android:layout_weight="1"
+            android:text="@string/accion_cancelar" />
+
+        <Button
+            android:id="@+id/boton_aceptar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textAllCaps="false"
+            android:backgroundTint="@color/colorAccent"
+            android:text="@string/accion_aceptar"
+            android:textColor="@android:color/white" />
+    </LinearLayout>
+
+
+
+</LinearLayout>
