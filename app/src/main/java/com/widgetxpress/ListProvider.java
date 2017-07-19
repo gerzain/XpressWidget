@@ -67,7 +67,8 @@ public class ListProvider implements RemoteViewsService.RemoteViewsFactory
     }
 
     @Override
-    public RemoteViews getViewAt(int i) {
+    public RemoteViews getViewAt(int i)
+    {
         final RemoteViews views=new RemoteViews(mContext.getPackageName(),R.layout.item_lista_actividad);
         final Actividad actividad=actividades.get(i);
         views.setTextViewText(R.id.titulo_actividad,actividad.getTitulo());
@@ -80,7 +81,7 @@ public class ListProvider implements RemoteViewsService.RemoteViewsFactory
 
     @Override
     public RemoteViews getLoadingView() {
-        return null;
+        return new RemoteViews(mContext.getPackageName(),R.layout.loading_layout);
     }
 
     @Override
