@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "815736847132",
+    "firebase_url": "https://xpresswidget.firebaseio.com",
+    "project_id": "xpresswidget",
+    "storage_bucket": "xpresswidget.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:815736847132:android:1416decd1ff7e35b",
+        "android_client_info": {
+          "package_name": "com.widgetxpress"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "815736847132-ufd6lgeo6puk0qh0ldmmt50v6smfqa38.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.widgetxpress",
+            "certificate_hash": "006758c9b8040d25a033d4f10ed992dd107e2334"
+          }
+        },
+        {
+          "client_id": "815736847132-93q6jqngstlndne9dh664mii8vrfnjhf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyACIBmXYkYiP-rjtPuFDpBVAVxF2hrHlxI"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "815736847132-93q6jqngstlndne9dh664mii8vrfnjhf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
