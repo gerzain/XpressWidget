@@ -1,13 +1,13 @@
 <resources>
     <string name="app_name">WidgetXpress</string>
-    <string name="appwidget_text">EXAMPLE</string>
+    <string name="appwidget_text">Xpress</string>
     <string name="add_widget">Add widget</string>
     <string name="texto_creador">Nombre</string>
     <string name="actividad">Aplicar cambios</string>
     <string name="fecha_inicio">Feb 14th</string>
     <string name="descripcionlogin">login</string>
     <string name="agregar">agregar</string>
-    <string name="empty_string">No hay actividades</string>
+    <string name="empty_string">No has iniciado sesión Pulsa para empezar a usar</string>
     <string name="realizar">¿Qué hay que hacer?</string>
     <string name="not_log_in">Error al iniciar sesión</string>
     <string name="not_close_session">Error al  cerrar sesión</string>
@@ -17,8 +17,16 @@
     <string name="desactivado">OFF</string>
     <string name="accion_cancelar">Cancelar</string>
     <string name="accion_aceptar">Agregar</string>
-    <string name="nueva_actividad">Agregar</string>
+    <string name="nueva_actividad">Agregar actividad</string>
     <string name="nombre_actividad">Introduce tarea</string>
     <string name="icono_fecha">fecha_tarea</string>
     <string name="fecha_sin_fijar">Fecha sin fijar</string>
+    <string name="btn_logout_from_google">cerrar sesión</string>
+    <string name="btn_revoke_access">quitar_acceso</string>
+    <string name="loading">cargando</string>
+    <string name="Login">Login</string>
+    <string name="editar">Editar</string>
+    <string name="tarea_completada">¿Tarea terminada?</string>
+    <string name="responsable">responsable</string>
+    <string name="dialogo_ok">Si</string>
 </resources>

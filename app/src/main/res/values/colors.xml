@@ -5,4 +5,5 @@
     <color name="colorAccent">#154ead</color>
     <color name="primary_text">#212121</color>
     <color name="texto_header">#d9ffffff</color>
+    <color name="rojo">#D50000</color>
 </resources>
