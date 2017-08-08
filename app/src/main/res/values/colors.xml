@@ -6,4 +6,5 @@
     <color name="primary_text">#212121</color>
     <color name="texto_header">#d9ffffff</color>
     <color name="rojo">#D50000</color>
+    <color name="set_off">#FFFFFF</color>
 </resources>
