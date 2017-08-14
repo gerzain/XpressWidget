@@ -4,8 +4,11 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.TimePickerDialog;
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
@@ -40,6 +43,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParser;
 import com.widgetxpress.R;
+import com.widgetxpress.Xpress;
 import com.widgetxpress.api.Api;
 import com.widgetxpress.model.Actividad;
 import com.widgetxpress.model.Actividades;
@@ -106,13 +110,37 @@ public class AgregarActividad extends AppCompatActivity
         setSupportActionBar(toolbar);
         creador=new GoogleUser(Login.id_google);
         gson=new GsonBuilder().setPrettyPrinting().create();
+        EditText titulo_actividad=(EditText)findViewById(R.id.edit_actividad);
         setFinishOnTouchOutside(false);
        // Log.e(TAG,objectToJson(creador));
+        id=Login.id_google;
+        Log.e(TAG,id);
         mPrefs =getSharedPreferences(PREFS_NAME,
                 Context.MODE_PRIVATE);
-       // nombre_actividad.addTextChangedListener(titulo_actividad);
+         titulo_actividad.addTextChangedListener(titulo);
+
         ButterKnife.bind(this);
     }
+    private  TextWatcher titulo=new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+           // showDialog();
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            if(s.length()==0)
+            {
+                finish();
+            }
+
+        }
+    };
     public  String objectToJson(GoogleUser o) {
         GsonBuilder gsonBuilder = new GsonBuilder();
         Gson gson = gsonBuilder.create();
@@ -137,11 +165,13 @@ public class AgregarActividad extends AppCompatActivity
     protected void onStart() {
         super.onStart();
         Log.d(TAG,"OnStart");
-        SharedPreferences.Editor editor = mPrefs.edit();
-        id=Login.id_google;
-        Log.e(TAG,id);
-        editor.putString(pref_id, id);
-        editor.apply();
+        if(id!=null) {
+            SharedPreferences.Editor editor = mPrefs.edit();
+            id = Login.id_google;
+            Log.e(TAG, id);
+            editor.putString(pref_id, id);
+            editor.apply();
+        }
 
     }
 
@@ -178,29 +208,7 @@ public class AgregarActividad extends AppCompatActivity
 
         return super.onKeyDown(keyCode, event);
     }
-    private final TextWatcher titulo_actividad=new TextWatcher() {
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-        }
-
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-        }
-
-        @Override
-        public void afterTextChanged(Editable s) {
-            if(s.length()==0)
-            {
-                finish();
-            }
-            else
-            {
-                showDialog();
-            }
-        }
-    };
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
@@ -221,13 +229,20 @@ public class AgregarActividad extends AppCompatActivity
                 return true;
             case android.R.id.home:
                 finish();
+                if(nombre_actividad.getText().length()==0)
+              {
+                  //finish();
+              }
+              else
+            {
+                showDialog();
+            }
+
                 return  true;
 
             default:
                 return super.onOptionsItemSelected(item);
         }
-
-
     }
 
     @OnClick(R.id.btnFechaInicio)
@@ -289,6 +304,7 @@ public class AgregarActividad extends AppCompatActivity
     }
     public void doPositiveClick() {
         Log.i("FragmentAlertDialog", "Positive click!");
+        finish();
     }
     public void doNegativeClick() {
         Log.i("FragmentAlertDialog", "Negative click!");
@@ -311,7 +327,7 @@ public class AgregarActividad extends AppCompatActivity
 
             myDialog.setIcon(R.mipmap.ic_launcher);
             myDialog.setTitle(title);
-            myDialog.setMessage("¿Deseas salir sin guardar cambios ");
+            myDialog.setMessage("¿Deseas salir sin guardar cambios? ");
             myDialog.setPositiveButton(R.string.dialogo_ok,
                     new DialogInterface.OnClickListener() {
                         @Override
@@ -405,10 +421,13 @@ public class AgregarActividad extends AppCompatActivity
                                   if(status.equalsIgnoreCase("OK"))
                                   {
                                       Snackbar.make(linearLayout, "Se agrego la actividad"+" "+ status, Snackbar.LENGTH_LONG)
-                                              .setActionTextColor(getResources().getColor(R.color.colorPrimary))
+                                              .setActionTextColor(getResources().getColor(R.color.primary_text))
                                               .show();
+                                      //sendRefreshBroadcast();
+                                      //updateWidget(getApplicationContext());
                                       Handler handler=new Handler();
-                                      handler.postDelayed(new Runnable() {
+                                      handler.postDelayed(new Runnable()
+                                      {
                                           @Override
                                           public void run() {
                                               finish();
@@ -418,7 +437,7 @@ public class AgregarActividad extends AppCompatActivity
                                   else
                                   {
                                       Snackbar.make(linearLayout, "Ocurrio un error al agregar la actividad"+" ", Snackbar.LENGTH_LONG)
-                                              .setActionTextColor(getResources().getColor(R.color.colorPrimary))
+                                              .setActionTextColor(getResources().getColor(R.color.primary_text))
                                               .show();
                                   }
 
@@ -457,6 +476,18 @@ public class AgregarActividad extends AppCompatActivity
               RequestQueue requestQueue = Volley.newRequestQueue(this);
               requestQueue.add(stringRequest);
           }
+    }
+    public  void sendRefreshBroadcast() {
+        Intent intent = new Intent(this, Xpress.class);
+        intent.setAction(Xpress.ACTION_REFRESH);
+        int ids[] = AppWidgetManager.getInstance(getApplication()).getAppWidgetIds(new ComponentName(getApplicationContext(), Xpress.class));
+        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS,ids);
+        sendBroadcast(intent);
+    }
+    private void updateWidget(Context context) {
+        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+        int appWidgetIds[] = appWidgetManager.getAppWidgetIds(new ComponentName(context, Xpress.class));
+        appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.widget_main_view);
     }
 
 
