@@ -24,8 +24,13 @@ public class GoogleUser
     @SerializedName("token")
     private String token;
 
-    public GoogleUser(String id) {
+    public GoogleUser(String id, String wikiname, String email, String picture, String idOrigen, String origen) {
         this.id = id;
+        this.wikiname = wikiname;
+        this.email = email;
+        this.picture = picture;
+        this.idOrigen = idOrigen;
+        this.origen = origen;
     }
 
     public String getId() {
