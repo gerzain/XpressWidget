@@ -1,6 +1,7 @@
 package com.widgetxpress.activity;
 
 import android.app.Activity;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
@@ -9,6 +10,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -35,8 +37,18 @@ import com.google.android.gms.common.api.Status;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 import com.widgetxpress.R;
+import com.widgetxpress.WidgetFetchService;
+import com.widgetxpress.WidgetService;
 import com.widgetxpress.Xpress;
+import com.widgetxpress.model.Actividad;
+import com.widgetxpress.model.GoogleUser;
 import com.widgetxpress.util.CircleTransform;
+import com.widgetxpress.util.SessionPrefs;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * Created by Irving on 19/07/2017.
@@ -52,14 +64,13 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
     private SignInButton btnSignIn;
     private Button btnSignOut, btnRevokeAccess;
     private LinearLayout llProfileLayout;
-    private ImageView imgProfilePic;
+    private CircleImageView imgProfilePic;
     private TextView txtName, txtEmail;
     private ProgressDialog mProgressDialog;
-    private RemoteViews remoteViews;
-    private ComponentName watchWidget;
     private int mAppWidgetId;
+    private String nombre;
     public static final String PREFS_NAME="XPRESS_PREFS";
-    public static final String PREF_ID_GOOGLE="PREF_USER_ID";
+    public static final String pref_id="PREF_USER_ID";
     private static boolean mIsLoggedIn=false;
     private  SharedPreferences mPrefs;
 
@@ -80,7 +91,7 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
         btnSignOut = (Button) findViewById(R.id.btn_sign_out);
         btnRevokeAccess = (Button) findViewById(R.id.btn_revoke_access);
         llProfileLayout = (LinearLayout) findViewById(R.id.llProfile);
-        imgProfilePic = (ImageView) findViewById(R.id.imgProfilePic);
+        imgProfilePic = (CircleImageView) findViewById(R.id.imgProfilePic);
         txtName = (TextView) findViewById(R.id.txtName);
         txtEmail = (TextView) findViewById(R.id.txtEmail);
 
@@ -101,9 +112,23 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
 
         mPrefs =getSharedPreferences(PREFS_NAME,
                 Context.MODE_PRIVATE);
+       // removeActividad();
+
 
 
         mAppWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
+
+    }
+    private void removeActividad()
+    {
+        if (WidgetFetchService.actividades != null) {
+
+            List<Actividad> actividades = new ArrayList<>(WidgetFetchService.actividades);
+            actividades.clear();
+
+            Log.i(TAG,"Tam lista"+ String.valueOf(actividades.size()));
+        }
+
 
     }
 
@@ -118,11 +143,11 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
         }
         else
         {
-             showProgressDialog();
+             //showProgressDialog();
             opr.setResultCallback(new ResultCallback<GoogleSignInResult>() {
                 @Override
                 public void onResult(@NonNull GoogleSignInResult googleSignInResult) {
-                    hideProgressDialog();
+                   // hideProgressDialog();
                     handleSignInResult(googleSignInResult);
                 }
             });
@@ -151,12 +176,10 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
                if(status.isSuccess())
                {
                    updateUI(false);
-                   setResultAndFinish();
-                   broadcastWidgetUpdate();
-                   SharedPreferences.Editor editor = mPrefs.edit();
-                   editor.putString(PREF_ID_GOOGLE,null);
-                   editor.apply();
+                    finish();
                    mIsLoggedIn=false;
+                   removeActividad();
+                   sendRefreshBroadcast();
 
                }
                else
@@ -172,6 +195,8 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
             public void onResult(@NonNull Status status) {
                 updateUI(false);
                 mIsLoggedIn=false;
+               // SessionPrefs.get(getApplicationContext()).logOut();
+               // logoutRefresh();
             }
         });
     }
@@ -193,51 +218,24 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
         if(result.isSuccess())
         {
             GoogleSignInAccount account = result.getSignInAccount();
-            final AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(getApplicationContext());
-            final RemoteViews remoteViews = new RemoteViews(getApplicationContext().getPackageName(), R.layout.xpress);
-            final ComponentName watchWidget = new ComponentName(getApplicationContext(), Xpress.class);
              assert account != null;
              id_google= account.getId();
              Log.i(TAG,id_google);
             SharedPreferences.Editor editor = mPrefs.edit();
-            editor.putString(PREF_ID_GOOGLE,id_google);
+            editor.putString(pref_id, id_google);
             editor.apply();
              txtName.setText(account.getDisplayName());
              txtEmail.setText(account.getEmail());
+             nombre=account.getDisplayName();
               Picasso.with(getApplicationContext())
                         .load(account.getPhotoUrl())
-                         .centerInside()
-                         .resize(100,100)
-                         .transform(new CircleTransform())
+                      .placeholder(R.drawable.ic_account_circle)
+                      .error(R.drawable.ic_account_circle)
                         .into(imgProfilePic);
-
-                //Para la imagen de perfil  dentro del widget
-            Picasso.with(getApplicationContext())
-                    .load(account.getPhotoUrl())
-                    .placeholder(R.drawable.ic_account_circle)
-                    .error(R.drawable.ic_account_circle)
-                    .centerInside()
-                    .resize(80,80)
-                    .transform(new CircleTransform())
-                    .into(new Target() {
-                        @Override
-                        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                            remoteViews.setImageViewBitmap(R.id.btn_logout,bitmap);
-                            appWidgetManager.updateAppWidget(watchWidget,remoteViews);
-                        }
-
-                        @Override
-                        public void onBitmapFailed(Drawable errorDrawable) {
-
-                        }
-
-                        @Override
-                        public void onPrepareLoad(Drawable placeHolderDrawable) {
-
-                        }
-                    });
                 updateUI(true);
                 mIsLoggedIn=true;
+            sendRefreshBroadcast();
+
 
 
         }
@@ -245,6 +243,15 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
         {
           updateUI(false);
         }
+
+    }
+
+    private void populateWidget() {
+        Intent widgetUpdateIntent = new Intent();
+        widgetUpdateIntent.setAction(Xpress.DATA_FETCHED);
+        widgetUpdateIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,
+                mAppWidgetId);
+        sendBroadcast(widgetUpdateIntent);
 
     }
     private void showProgressDialog() {
@@ -267,38 +274,38 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
     private void updateUI(boolean isSignedIn)
     {
 
+        RemoteViews remoteViews;
+        ComponentName watchWidget;
         if (isSignedIn)
         {
             AppWidgetManager appWidgetManager =AppWidgetManager.getInstance(getApplicationContext());
-            remoteViews=new RemoteViews(getApplicationContext().getPackageName(),R.layout.xpress);
-            watchWidget=new ComponentName(getApplicationContext(), Xpress.class);
+            remoteViews =new RemoteViews(getApplicationContext().getPackageName(),R.layout.xpress_widget);
+            watchWidget =new ComponentName(getApplicationContext(), Xpress.class);
             remoteViews.setViewVisibility(R.id.btn_login,View.GONE);
-            remoteViews.setViewVisibility(R.id.btn_logout,View.VISIBLE);
-            remoteViews.setViewVisibility(R.id.btn_agregar,View.VISIBLE);
+            remoteViews.setViewVisibility(R.id.widget_title_star,View.VISIBLE);
+            remoteViews.setViewVisibility(R.id.widget_title_add,View.VISIBLE);
             btnSignIn.setVisibility(View.GONE);
             btnSignOut.setVisibility(View.VISIBLE);
             btnRevokeAccess.setVisibility(View.VISIBLE);
             llProfileLayout.setVisibility(View.VISIBLE);
-            appWidgetManager.updateAppWidget(watchWidget,remoteViews);
+            appWidgetManager.updateAppWidget(watchWidget, remoteViews);
+
 
 
         } else
             {
             AppWidgetManager appWidgetManager =AppWidgetManager.getInstance(getApplicationContext());
-             remoteViews=new RemoteViews(getApplicationContext().getPackageName(),R.layout.xpress);
-                watchWidget=new ComponentName(getApplicationContext(),Xpress.class);
-                remoteViews.setViewVisibility(R.id.btn_login,View.VISIBLE);
-                remoteViews.setViewVisibility(R.id.btn_logout,View.GONE);
-                remoteViews.setViewVisibility(R.id.btn_agregar,View.GONE);
-                remoteViews.setEmptyView(R.id.widget_list,R.id.empty_view);
-            btnSignIn.setVisibility(View.VISIBLE);
-            btnSignOut.setVisibility(View.GONE);
-            btnRevokeAccess.setVisibility(View.GONE);
-            llProfileLayout.setVisibility(View.GONE);
-                appWidgetManager.updateAppWidget(watchWidget,remoteViews);
+             remoteViews =new RemoteViews(getApplicationContext().getPackageName(),R.layout.xpress_widget);
+                watchWidget =new ComponentName(getApplicationContext(),Xpress.class);
+                remoteViews.setViewVisibility(R.id.widget_title_star,View.GONE);
+                remoteViews.setViewVisibility(R.id.widget_title_add,View.GONE);
+                btnSignIn.setVisibility(View.VISIBLE);
+                btnSignOut.setVisibility(View.GONE);
+                btnRevokeAccess.setVisibility(View.GONE);
+                llProfileLayout.setVisibility(View.GONE);
+                appWidgetManager.updateAppWidget(watchWidget, remoteViews);
 
-
-        }
+            }
     }
 
     @Override
@@ -333,11 +340,31 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
         sendBroadcast(intent);
     }
 
+    /**
+     * Permite obtener las actividaes al mismo tiempo que hace el login
+     */
+    public  void sendRefreshBroadcast() {
+        Intent intent = new Intent(this, Xpress.class);
+        intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+        int ids[] = AppWidgetManager.getInstance(getApplication()).getAppWidgetIds(new ComponentName(getApplicationContext(), Xpress.class));
+        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS,ids);
+        sendBroadcast(intent);
+    }
+    private void logoutRefresh()
+    {
+        Intent intent = new Intent(this, Xpress.class);
+        intent.setAction(Xpress.ACTION_GOTO_LOGOUT);
+        int ids[] = AppWidgetManager.getInstance(getApplication()).getAppWidgetIds(new ComponentName(getApplicationContext(), Xpress.class));
+        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS,ids);
+        sendBroadcast(intent);
+    }
+
+
     private void setResultAndFinish()
     {
         Intent resultValue = new Intent();
         resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mAppWidgetId);
         setResult(Activity.RESULT_OK, resultValue);
-        finish();
+        this.finish();
     }
 }
