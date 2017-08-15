@@ -24,6 +24,12 @@ import android.widget.RemoteViews;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -34,6 +40,8 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 import com.widgetxpress.R;
@@ -44,11 +52,17 @@ import com.widgetxpress.model.Actividad;
 import com.widgetxpress.model.GoogleUser;
 import com.widgetxpress.util.CircleTransform;
 import com.widgetxpress.util.SessionPrefs;
+import com.android.volley.Request;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+
 
 /**
  * Created by Irving on 19/07/2017.
@@ -73,6 +87,7 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
     public static final String pref_id="PREF_USER_ID";
     private static boolean mIsLoggedIn=false;
     private  SharedPreferences mPrefs;
+    private Gson gson;
 
     public  static boolean ismIsLoggedIn()
     {
@@ -114,23 +129,17 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
                 Context.MODE_PRIVATE);
        // removeActividad();
 
+        GsonBuilder gsonBuilder=new GsonBuilder();
+        gsonBuilder.serializeNulls();
+        gsonBuilder.setPrettyPrinting();
+        gson=gsonBuilder.create();
+
 
 
         mAppWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
 
     }
-    private void removeActividad()
-    {
-        if (WidgetFetchService.actividades != null) {
 
-            List<Actividad> actividades = new ArrayList<>(WidgetFetchService.actividades);
-            actividades.clear();
-
-            Log.i(TAG,"Tam lista"+ String.valueOf(actividades.size()));
-        }
-
-
-    }
 
     @Override
     protected void onStart() {
@@ -178,7 +187,6 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
                    updateUI(false);
                     finish();
                    mIsLoggedIn=false;
-                   removeActividad();
                    sendRefreshBroadcast();
 
                }
@@ -234,7 +242,74 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
                         .into(imgProfilePic);
                 updateUI(true);
                 mIsLoggedIn=true;
-            sendRefreshBroadcast();
+            Uri photoUri=account.getPhotoUrl();
+            if(photoUri!=null) {
+
+
+                String url_imagen = photoUri.toString();
+                GoogleUser registrar_usuario = new GoogleUser(
+                        id_google,
+                        account.getDisplayName(),
+                        account.getEmail(),
+                        url_imagen,
+                        "0",
+                        "googleplus");
+                account.getPhotoUrl().getPath();
+
+
+                final String user = gson.toJson(registrar_usuario);
+                Log.i(TAG, user);
+                String url_usuario = null;
+                try {
+                    url_usuario = URLEncoder.encode(user, "UTF-8");
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+
+
+                String url = "http://xpress.genniux.net/php/xpress2.0/signin.php?user=" + url_usuario + "&token=0";
+                System.out.println(url);
+
+                StringRequest stringRequest = new StringRequest(Request.Method.POST
+                        , url, new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Log.i(TAG, response);
+
+
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
+
+                    }
+                }) {
+                    @Override
+                    protected Map<String, String> getParams() {
+
+
+                        Map<String, String> params = new HashMap<String, String>();
+                        params.put("Json", user);
+                        return params;
+                    }
+
+                    @Override
+                    public Map<String, String> getHeaders() throws AuthFailureError {
+                        Map<String, String> params = new HashMap<String, String>();
+                        params.put("Content-Type", "application/json");
+                        return params;
+                    }
+
+                };
+                RequestQueue requestQueue = Volley.newRequestQueue(this);
+                requestQueue.add(stringRequest);
+
+                sendRefreshBroadcast();
+            }
+
+
+
 
 
 
