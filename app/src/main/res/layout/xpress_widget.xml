@@ -27,7 +27,6 @@
             android:layout_height="48dp"
             android:layout_weight="1"
             android:gravity="center_vertical"
-            android:textStyle="bold"
             android:text="@string/appwidget_text"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="@color/texto_header" />
@@ -48,6 +47,14 @@
             android:contentDescription="@string/agregar"
             android:src="@drawable/ic_add_circle"
             android:visibility="gone" />
+
+        <ImageButton
+            android:id="@+id/refresh"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@drawable/boton_circular"
+            android:visibility="gone"
+            android:src="@drawable/ic_refresh" />
 
     </LinearLayout>
 
