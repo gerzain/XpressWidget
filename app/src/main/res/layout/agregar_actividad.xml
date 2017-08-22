@@ -104,14 +104,25 @@
         android:paddingTop="@dimen/editar_actividad_padding">
 
         <TextView
+            android:layout_weight="2.5"
             style="@style/EditLabelStyle"
             android:text="@string/recordatorio" />
 
-        <TextView
-            android:id="@+id/tv_reminder_time"
-            style="@style/ReminderTextView" />
-    </LinearLayout>
+        <EditText
+            android:id="@+id/edit_hora"
+            style="@style/EditTextStyle"
+            android:layout_weight="4"
+            android:hint="@string/hora_sin_fijar"
+            android:inputType="datetime" />
 
+        <ImageButton
+            android:id="@+id/btn_hora"
+            style="@style/FormInput"
+            android:contentDescription="@string/icono_fecha"
+            android:src="@drawable/ic_schedule" />
+
+
+    </LinearLayout>
 
 
 </LinearLayout>
