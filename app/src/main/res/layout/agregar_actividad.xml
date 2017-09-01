@@ -25,6 +25,7 @@
         <TextView
             style="@style/EditLabelStyle"
             android:layout_weight="2.5"
+            android:focusableInTouchMode="false"
             android:text="@string/realizar"
             />
         <EditText
@@ -44,6 +45,7 @@
     <LinearLayout
         android:id="@+id/contenedor_fecha_inicio"
         style="@style/EditHabitNameForm"
+        android:visibility="gone"
         android:paddingTop="@dimen/editar_actividad_padding">
 
         <TextView
@@ -73,6 +75,7 @@
     <LinearLayout
         android:id="@+id/contenedor_fecha_termino"
         style="@style/EditHabitNameForm"
+        android:visibility="gone"
         android:paddingTop="@dimen/editar_actividad_padding">
 
         <TextView
@@ -101,6 +104,7 @@
     <LinearLayout
         android:id="@+id/container_reminder"
         style="@style/EditHabitNameForm"
+        android:visibility="gone"
         android:paddingTop="@dimen/editar_actividad_padding">
 
         <TextView
