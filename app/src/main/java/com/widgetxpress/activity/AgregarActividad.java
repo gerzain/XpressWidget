@@ -1,5 +1,6 @@
 package com.widgetxpress.activity;
 
+import android.annotation.TargetApi;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -10,8 +11,11 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
@@ -33,9 +37,11 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
@@ -49,6 +55,7 @@ import com.widgetxpress.model.Actividad;
 import com.widgetxpress.model.Actividades;
 import com.widgetxpress.model.GoogleUser;
 import com.widgetxpress.util.SessionPrefs;
+import com.widgetxpress.util.VolleyErrorHelper;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -85,7 +92,13 @@ public class AgregarActividad extends AppCompatActivity
     EditText editText_fecha_termino;
     @BindView(R.id.root)
     LinearLayout linearLayout;
-    @BindView(R.id.tv_reminder_time)
+    @BindView(R.id.contenedor_fecha_inicio)
+    LinearLayout linear_fecha;
+    @BindView(R.id.contenedor_fecha_termino)
+    LinearLayout liner_fecha_termino;
+    @BindView(R.id.container_reminder)
+    LinearLayout linearLayout_hora;
+    @BindView(R.id.edit_hora)
     TextView recordatorio;
     private  GoogleUser creador;
     private GoogleUser responsable;
@@ -108,19 +121,67 @@ public class AgregarActividad extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_close);
         setSupportActionBar(toolbar);
-        creador=new GoogleUser(Login.id_google);
         gson=new GsonBuilder().setPrettyPrinting().create();
         EditText titulo_actividad=(EditText)findViewById(R.id.edit_actividad);
+        EditText fecha_inicio=(EditText)findViewById(R.id.edit_fecha_inicio);
+        EditText fecha_fin=(EditText)findViewById(R.id.edit_fecha_termino);
         setFinishOnTouchOutside(false);
        // Log.e(TAG,objectToJson(creador));
         id=Login.id_google;
-        Log.e(TAG,id);
+        if(id!=null) {
+            Log.i(TAG, id);
+
+        }
         mPrefs =getSharedPreferences(PREFS_NAME,
                 Context.MODE_PRIVATE);
          titulo_actividad.addTextChangedListener(titulo);
+        fecha_inicio.addTextChangedListener(fecha_inicial);
+        fecha_fin.addTextChangedListener(fecha_termino);
+
+        titulo_actividad.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(hasFocus)
+                {
+                    showDialog();
+                }
+            }
+        });
 
         ButterKnife.bind(this);
     }
+    private TextWatcher fecha_termino=new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            linearLayout_hora.setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+
+        }
+    };
+    private  TextWatcher fecha_inicial=new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            liner_fecha_termino.setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+
+        }
+    };
     private  TextWatcher titulo=new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -129,35 +190,29 @@ public class AgregarActividad extends AppCompatActivity
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-           // showDialog();
+
+            linear_fecha.setVisibility(View.VISIBLE);
+
         }
 
         @Override
         public void afterTextChanged(Editable s) {
-            if(s.length()==0)
+           /* if(s.length()==0)
             {
                 finish();
             }
+            else
+            {
+                showDialog();
+            }*/
 
         }
     };
-    public  String objectToJson(GoogleUser o) {
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        Gson gson = gsonBuilder.create();
-        String json = gson.toJson(o);
-
-        return json;
-    }
 
     @Override
     protected void onPause() {
         super.onPause();
-        Log.d(TAG,"OnPause");
-        id=Login.id_google;
-        Log.e(TAG,id);
-        SharedPreferences.Editor editor = mPrefs.edit();
-        editor.putString(pref_id, id);
-        editor.apply();
+
 
     }
 
@@ -168,7 +223,7 @@ public class AgregarActividad extends AppCompatActivity
         if(id!=null) {
             SharedPreferences.Editor editor = mPrefs.edit();
             id = Login.id_google;
-            Log.e(TAG, id);
+            Log.i(TAG, id);
             editor.putString(pref_id, id);
             editor.apply();
         }
@@ -223,6 +278,7 @@ public class AgregarActividad extends AppCompatActivity
             case R.id.action_agregar:
                 try {
                     agregarActividad();
+                    notificarLista();
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                 }
@@ -231,7 +287,7 @@ public class AgregarActividad extends AppCompatActivity
                 finish();
                 if(nombre_actividad.getText().length()==0)
               {
-                  //finish();
+                  finish();
               }
               else
             {
@@ -279,7 +335,7 @@ public class AgregarActividad extends AppCompatActivity
         },myear,mMonth,mDay);
         datePickerDialog.show();
     }
-    @OnClick(R.id.tv_reminder_time)
+    @OnClick(R.id.btn_hora)
     void esocgerhora()
     {
         final Calendar c = Calendar.getInstance();
@@ -295,6 +351,23 @@ public class AgregarActividad extends AppCompatActivity
         },hour,minute,false);
         timePickerDialog.show();
 
+    }
+    @OnClick(R.id.edit_fecha_inicio)
+    void escogerfecha_inicio_edit()
+    {
+        final Calendar c=Calendar.getInstance();
+        int myear=c.get(Calendar.YEAR);
+        int mMonth = c.get(Calendar.MONTH);
+        int mDay = c.get(Calendar.DAY_OF_MONTH);
+
+        datePickerDialog=new DatePickerDialog(AgregarActividad.this, new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker datePicker, int year, int  monthOfYear, int dayOfMonth) {
+                editText_fecha_inicio.setText(dayOfMonth + "-"
+                        + (monthOfYear + 1) + "-" + year);
+            }
+        },myear,mMonth,mDay);
+        datePickerDialog.show();
     }
     void showDialog()
     {
@@ -350,31 +423,6 @@ public class AgregarActividad extends AppCompatActivity
     }
 
 
-    /* private void agregarActividad(Actividad actividad)
-    {
-
-        String url = "http://xpress.genniux.net/php/xpress2.0/agenda/";
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(url)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        Api servicio = retrofit.create(Api.class);
-        Call<Actividad> call=servicio.agregarActividad(actividad);
-        call.enqueue(new Callback<Actividad>() {
-            @Override
-            public void onResponse(Call<Actividad> call, retrofit2.Response<Actividad> response) {
-                Toast.makeText(getApplicationContext(),"Se agrego"+response.body().getId(),Toast.LENGTH_SHORT).show();
-
-            }
-
-            @Override
-            public void onFailure(Call<Actividad> call, Throwable t) {
-                Toast.makeText(getApplicationContext(),t.getMessage(),Toast.LENGTH_SHORT).show();
-            }
-        });
-    }*/
-
 
       public void agregarActividad() throws UnsupportedEncodingException {
         actividad=nombre_actividad.getText().toString().trim();
@@ -384,7 +432,7 @@ public class AgregarActividad extends AppCompatActivity
         date_time_inicio=fecha_inicio+" "+hora;
         date_time_termino=fecha_fin+" "+hora;
 
-          if(TextUtils.isEmpty(actividad) || TextUtils.isEmpty(fecha_inicio) || TextUtils.isEmpty(fecha_fin) || TextUtils.isEmpty(hora))
+          if(TextUtils.isEmpty(actividad) || TextUtils.isEmpty(fecha_inicio) || TextUtils.isEmpty(fecha_fin) || TextUtils.isEmpty(hora) || id==null)
           {
               nombre_actividad.setError("Ingresa una actividad");
               editText_fecha_inicio.setError("Seleciona  fecha de inicio");
@@ -410,7 +458,7 @@ public class AgregarActividad extends AppCompatActivity
                           @Override
                           public void onResponse(String response)
                           {
-                              Log.d(TAG, response);
+                              Log.i(TAG, response);
 
                               JSONObject statusReport;
                               try
@@ -420,23 +468,22 @@ public class AgregarActividad extends AppCompatActivity
 
                                   if(status.equalsIgnoreCase("OK"))
                                   {
-                                      Snackbar.make(linearLayout, "Se agrego la actividad"+" "+ status, Snackbar.LENGTH_LONG)
+                                      Snackbar.make(linearLayout, "Se agrego la actividad correctamente", Snackbar.LENGTH_LONG)
                                               .setActionTextColor(getResources().getColor(R.color.primary_text))
                                               .show();
-                                      //sendRefreshBroadcast();
-                                      //updateWidget(getApplicationContext());
                                       Handler handler=new Handler();
                                       handler.postDelayed(new Runnable()
                                       {
                                           @Override
                                           public void run() {
                                               finish();
+                                             notificarLista();
                                           }
-                                      },5000L);
+                                      },2000L);
                                   }
                                   else
                                   {
-                                      Snackbar.make(linearLayout, "Ocurrio un error al agregar la actividad"+" ", Snackbar.LENGTH_LONG)
+                                      Snackbar.make(linearLayout, "Ocurrio un error al agregar la actividad", Snackbar.LENGTH_LONG)
                                               .setActionTextColor(getResources().getColor(R.color.primary_text))
                                               .show();
                                   }
@@ -451,10 +498,15 @@ public class AgregarActividad extends AppCompatActivity
                       new Response.ErrorListener() {
                           @Override
                           public void onErrorResponse(VolleyError error) {
-                              Toast.makeText(AgregarActividad.this, error.toString(), Toast.LENGTH_LONG).show();
+                              //VolleyErrorHelper.getErrorMessage(getApplicationContext(),error);
+                             // Toast.makeText(getApplicationContext(),VolleyErrorHelper.getErrorMessage(getApplicationContext(),error),Toast.LENGTH_LONG).show();
+                              Snackbar.make(linearLayout,VolleyErrorHelper.getErrorMessage(getApplicationContext(),error),Snackbar.LENGTH_LONG)
+                                      .setActionTextColor(getResources().getColor(R.color.primary_text));
+
                               Log.i(TAG, error.getLocalizedMessage());
                           }
-                      }) {
+                      })
+              {
                   @Override
                   protected Map<String, String> getParams() {
 
@@ -477,16 +529,9 @@ public class AgregarActividad extends AppCompatActivity
               requestQueue.add(stringRequest);
           }
     }
-    public  void sendRefreshBroadcast() {
-        Intent intent = new Intent(this, Xpress.class);
-        intent.setAction(Xpress.ACTION_REFRESH);
-        int ids[] = AppWidgetManager.getInstance(getApplication()).getAppWidgetIds(new ComponentName(getApplicationContext(), Xpress.class));
-        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS,ids);
-        sendBroadcast(intent);
-    }
-    private void updateWidget(Context context) {
-        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
-        int appWidgetIds[] = appWidgetManager.getAppWidgetIds(new ComponentName(context, Xpress.class));
+    private void notificarLista() {
+        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(getApplicationContext());
+        int appWidgetIds[] = appWidgetManager.getAppWidgetIds(new ComponentName(getApplicationContext(), Xpress.class));
         appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.widget_main_view);
     }
 
