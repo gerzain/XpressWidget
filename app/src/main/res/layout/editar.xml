@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:id="@+id/root_editar"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_height="match_parent">
+
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1.0">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingBottom="32dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="12dp"
+                android:paddingTop="0dp">
+
+                <TextView
+                    android:id="@+id/head_titulo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start|end|center_horizontal|fill_horizontal|center|fill|start|end"
+                    android:layout_marginTop="24dp"
+                    android:text="@string/realizar"
+                    android:textIsSelectable="false" />
+
+                <LinearLayout
+                    android:id="@+id/layTaskName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="top|bottom|center_vertical|fill_vertical|center|fill"
+                    android:orientation="horizontal">
+
+                    <EditText
+                        android:id="@+id/edtActividad"
+                        android:focusableInTouchMode="false"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"
+                        android:gravity="top|bottom|center_vertical|fill_vertical|center|fill"
+                        android:hint="@string/nombre_actividad"
+                        android:inputType="text|textCapCharacters|textCapWords|textCapSentences|textAutoCorrect|textMultiLine|textImeMultiLine|textNoSuggestions|textShortMessage"
+                        android:shadowColor="#FFFF"
+                        android:shadowDx="0.0"
+                        android:shadowDy="1.0"
+                        android:shadowRadius="1.0"
+                        android:textColorHint="@color/colorAccent" />
+
+                </LinearLayout>
+
+                <CheckBox
+                    android:id="@+id/checkFinished"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/tarea_completada"
+                    android:shadowColor="#FFFF"
+                    android:shadowDx="0.0"
+                    android:shadowDy="1.0"
+                    android:shadowRadius="1.0"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/head_creador"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start|end|center_horizontal|fill_horizontal|center|fill|start|end"
+                    android:layout_marginTop="24dp"
+                    android:text="@string/creador"
+                    android:textIsSelectable="false" />
+
+                <LinearLayout
+                    android:id="@+id/lay_creador"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="top|bottom|center_vertical|fill_vertical|center|fill"
+                    android:orientation="horizontal">
+
+                    <EditText
+                        android:id="@+id/editCreador"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="3.28"
+                        android:inputType="text|textCapCharacters|textCapWords|textCapSentences|textAutoCorrect|textAutoComplete|textMultiLine|textImeMultiLine|textNoSuggestions|textUri|textEmailAddress|textEmailSubject|textShortMessage|textLongMessage|textPersonName|textPostalAddress|textPassword|textVisiblePassword|textWebEditText|textFilter|textPhonetic|textWebEmailAddress|textWebPassword|phone"
+                        android:shadowColor="#FFFF"
+                        android:shadowDx="0.0"
+                        android:shadowDy="1.0"
+                        android:shadowRadius="1.0" />
+
+                    <ImageView
+                        android:id="@+id/ivCreador"
+                        android:layout_width="40dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical|end"
+                        android:padding="4dp"
+                        android:src="@drawable/ic_account_circle_black" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/head_responsable"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start|end|center_horizontal|fill_horizontal|center|fill|start|end"
+                    android:layout_marginTop="24dp"
+                    android:text="@string/responsable"
+                    android:textIsSelectable="false" />
+
+                <LinearLayout
+                    android:id="@+id/layresponsable"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="top|bottom|center_vertical|fill_vertical|center|fill"
+                    android:orientation="horizontal">
+
+                    <EditText
+                        android:id="@+id/edtResponsable"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.0"
+                        android:inputType="text|textCapCharacters|textCapWords|textCapSentences|textAutoCorrect|textAutoComplete|textMultiLine|textImeMultiLine|textNoSuggestions|textUri|textEmailAddress|textEmailSubject|textShortMessage|textLongMessage|textPersonName|textPostalAddress|textPassword|textVisiblePassword|textWebEditText|textFilter|textPhonetic|textWebEmailAddress|textWebPassword|phone"
+                        android:shadowColor="#FFFF"
+                        android:shadowDx="0.0"
+                        android:shadowDy="1.0"
+                        android:shadowRadius="1.0" />
+
+                    <ImageView
+                        android:id="@+id/ivResponsable"
+                        android:layout_width="40dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:padding="4dp"
+                        android:src="@drawable/ic_account_circle_black" />
+                </LinearLayout>
+                <!--Termina apartado responsable-->
+
+
+                <TextView
+                    android:id="@+id/head_fecha_inicio"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start|end|center_horizontal|fill_horizontal|center|fill|start|end"
+                    android:layout_marginTop="24dp"
+                    android:text="@string/fechainicio"
+                    android:textIsSelectable="false" />
+
+
+
+            <LinearLayout
+                android:id="@+id/layFechaInicio"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="top|bottom|center_vertical|fill_vertical|center|fill"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/edtFechaInicio"
+                    android:layout_width="0dp"
+                    android:focusableInTouchMode="false"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:gravity="top|bottom|center_vertical|fill_vertical|center|fill"
+                    android:hint="@string/fecha_sin_fijar"
+                    android:inputType="text|textCapCharacters|textCapWords|textCapSentences|textAutoCorrect|textAutoComplete|textMultiLine|textImeMultiLine|textNoSuggestions|textUri|textEmailAddress|textEmailSubject|textShortMessage|textLongMessage|textPersonName|textPostalAddress|textPassword|textVisiblePassword|textWebEditText|textFilter|textPhonetic|textWebEmailAddress|textWebPassword|phone"
+                    android:shadowColor="#FFFF"
+                    android:shadowDx="0.0"
+                    android:shadowDy="1.0"
+                    android:shadowRadius="1.0"
+                    android:textColorHint="@color/colorAccent" />
+
+                <ImageView
+                    android:id="@+id/btn_FechaInicio"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="8dp"
+                    android:padding="4dp"
+                    android:src="@drawable/ic_event" />
+
+
+
+
+                </LinearLayout>
+                <!---Termina fehca de inicio-->
+
+                <TextView
+                    android:id="@+id/head_fecha_fin"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start|end|center_horizontal|fill_horizontal|center|fill|start|end"
+                    android:layout_marginTop="24dp"
+                    android:text="@string/fechatermino"
+                    android:textIsSelectable="false" />
+
+                <LinearLayout
+                    android:id="@+id/layFechaFin"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="top|bottom|center_vertical|fill_vertical|center|fill"
+                    android:orientation="horizontal">
+
+                    <EditText
+                        android:id="@+id/edtFechaFin"
+                        android:layout_width="0dp"
+                        android:focusableInTouchMode="false"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"
+                        android:gravity="top|bottom|center_vertical|fill_vertical|center|fill"
+                        android:hint="@string/fecha_sin_fijar"
+                        android:inputType="text|textCapCharacters|textCapWords|textCapSentences|textAutoCorrect|textAutoComplete|textMultiLine|textImeMultiLine|textNoSuggestions|textUri|textEmailAddress|textEmailSubject|textShortMessage|textLongMessage|textPersonName|textPostalAddress|textPassword|textVisiblePassword|textWebEditText|textFilter|textPhonetic|textWebEmailAddress|textWebPassword|phone"
+                        android:shadowColor="#FFFF"
+                        android:shadowDx="0.0"
+                        android:shadowDy="1.0"
+                        android:shadowRadius="1.0"
+                        android:textColorHint="@color/colorAccent" />
+
+                    <ImageView
+                        android:id="@+id/btnFechaFin"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="8dp"
+                        android:padding="4dp"
+                        android:src="@drawable/ic_event" />
+
+                </LinearLayout>
+
+                <!---Termina fecha de termino-->
+
+                <TextView
+                    android:id="@+id/head_hora"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start|end|center_horizontal|fill_horizontal|center|fill|start|end"
+                    android:layout_marginTop="24dp"
+                    android:text="@string/recordatorio"
+                    android:textIsSelectable="false" />
+
+                <LinearLayout
+                    android:id="@+id/laHora"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="top|bottom|center_vertical|fill_vertical|center|fill"
+                    android:orientation="horizontal">
+
+                    <EditText
+                        android:id="@+id/edtHora"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"
+                        android:gravity="top|bottom|center_vertical|fill_vertical|center|fill"
+                        android:hint="@string/fecha_sin_fijar"
+                        android:inputType="text|textCapCharacters|textCapWords|textCapSentences|textAutoCorrect|textMultiLine|textImeMultiLine|textNoSuggestions|textShortMessage"
+                        android:shadowColor="#FFFF"
+                        android:shadowDx="0.0"
+                        android:shadowDy="1.0"
+                        android:shadowRadius="1.0"
+                        android:textColorHint="@color/colorAccent" />
+
+                    <ImageView
+                        android:id="@+id/btnhora"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="8dp"
+                        android:padding="4dp"
+                        android:src="@drawable/ic_schedule" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+        </ScrollView>
+    </RelativeLayout>
+
+</LinearLayout>
+
+
+
+
+
+
