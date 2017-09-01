@@ -33,7 +33,7 @@ public class SessionPrefs
         mPrefs = context.getApplicationContext()
                 .getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
 
-       // mIsLoggedIn = !TextUtils.isEmpty(mPrefs.getString(PREF_ID_GOOGLE, null));
+        mIsLoggedIn = !TextUtils.isEmpty(mPrefs.getString(PREF_ID_GOOGLE, null));
     }
     public boolean isLoggedIn()
     {
