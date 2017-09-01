@@ -67,6 +67,10 @@ public class Actividad
         return fechaFin;
     }
 
+    public GoogleUser getResponsable() {
+        return responsable;
+    }
+
     public String getHour() {
         return hour;
     }
