@@ -12,17 +12,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-       <!-- <activity android:name=".MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>-->
         <activity
+
             android:name=".activity.AgregarActividad"
-            android:theme="@style/DialogTheme"
-            android:label="@string/nueva_actividad" />
+            android:label="@string/nueva_actividad"
+            android:theme="@style/DialogTheme" />
         <activity
             android:name=".activity.Login"
             android:label="@string/Login"
@@ -34,7 +29,7 @@
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
                 <action android:name="com.widgetxpress.DATA_FETCHED" />
-                <action android:name="com.widgetxpress.ACTION_GOTO_LOGOUT"/>
+                <action android:name="com.widgetxpress.ACTION_GOTO_LOGOUT" />
             </intent-filter>
 
             <meta-data
@@ -52,7 +47,8 @@
             android:enabled="true"
             android:exported="true" />
 
-        <activity android:name=".activity.DetailActividad"
+        <activity
+            android:name=".activity.DetailActividad"
             android:label="@string/editar"
             android:theme="@style/DialogTheme">
 
