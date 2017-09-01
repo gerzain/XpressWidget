@@ -16,6 +16,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -88,6 +90,7 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
     private static boolean mIsLoggedIn=false;
     private  SharedPreferences mPrefs;
     private Gson gson;
+    GoogleUser registrar_usuario;
 
     public  static boolean ismIsLoggedIn()
     {
@@ -130,13 +133,33 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
        // removeActividad();
 
         GsonBuilder gsonBuilder=new GsonBuilder();
-        gsonBuilder.serializeNulls();
         gsonBuilder.setPrettyPrinting();
         gson=gsonBuilder.create();
 
 
 
         mAppWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
+
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_login, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case R.id.action_login:
+               finish();
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+
 
     }
 
@@ -187,7 +210,6 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
                    updateUI(false);
                     finish();
                    mIsLoggedIn=false;
-                   sendRefreshBroadcast();
 
                }
                else
@@ -232,13 +254,15 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
             SharedPreferences.Editor editor = mPrefs.edit();
             editor.putString(pref_id, id_google);
             editor.apply();
+
+            SessionPrefs.get(getApplicationContext()).guardar_id(id_google);
              txtName.setText(account.getDisplayName());
              txtEmail.setText(account.getEmail());
              nombre=account.getDisplayName();
               Picasso.with(getApplicationContext())
                         .load(account.getPhotoUrl())
-                      .placeholder(R.drawable.ic_account_circle)
-                      .error(R.drawable.ic_account_circle)
+                      .placeholder(R.drawable.ic_account_circle_black)
+                      .error(R.drawable.ic_account_circle_black)
                         .into(imgProfilePic);
                 updateUI(true);
                 mIsLoggedIn=true;
@@ -254,8 +278,6 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
                         url_imagen,
                         "0",
                         "googleplus");
-                account.getPhotoUrl().getPath();
-
 
                 final String user = gson.toJson(registrar_usuario);
                 Log.i(TAG, user);
@@ -345,7 +367,10 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
         }
     }
 
-
+    /**
+     *
+     * @param isSignedIn Permite saber si tiene iniciada la sesión
+     */
     private void updateUI(boolean isSignedIn)
     {
 
@@ -359,6 +384,7 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
             remoteViews.setViewVisibility(R.id.btn_login,View.GONE);
             remoteViews.setViewVisibility(R.id.widget_title_star,View.VISIBLE);
             remoteViews.setViewVisibility(R.id.widget_title_add,View.VISIBLE);
+            remoteViews.setViewVisibility(R.id.refresh,View.VISIBLE);
             btnSignIn.setVisibility(View.GONE);
             btnSignOut.setVisibility(View.VISIBLE);
             btnRevokeAccess.setVisibility(View.VISIBLE);
@@ -374,6 +400,7 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
                 watchWidget =new ComponentName(getApplicationContext(),Xpress.class);
                 remoteViews.setViewVisibility(R.id.widget_title_star,View.GONE);
                 remoteViews.setViewVisibility(R.id.widget_title_add,View.GONE);
+                remoteViews.setViewVisibility(R.id.refresh,View.GONE);
                 btnSignIn.setVisibility(View.VISIBLE);
                 btnSignOut.setVisibility(View.GONE);
                 btnRevokeAccess.setVisibility(View.GONE);
@@ -408,12 +435,6 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
 
         }
     }
-    private void broadcastWidgetUpdate()
-    {
-        Intent intent = new Intent(AppWidgetManager.ACTION_APPWIDGET_UPDATE, null, this,Xpress.class);
-        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, new int[]{mAppWidgetId});
-        sendBroadcast(intent);
-    }
 
     /**
      * Permite obtener las actividaes al mismo tiempo que hace el login
@@ -424,22 +445,5 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
         int ids[] = AppWidgetManager.getInstance(getApplication()).getAppWidgetIds(new ComponentName(getApplicationContext(), Xpress.class));
         intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS,ids);
         sendBroadcast(intent);
-    }
-    private void logoutRefresh()
-    {
-        Intent intent = new Intent(this, Xpress.class);
-        intent.setAction(Xpress.ACTION_GOTO_LOGOUT);
-        int ids[] = AppWidgetManager.getInstance(getApplication()).getAppWidgetIds(new ComponentName(getApplicationContext(), Xpress.class));
-        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS,ids);
-        sendBroadcast(intent);
-    }
-
-
-    private void setResultAndFinish()
-    {
-        Intent resultValue = new Intent();
-        resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mAppWidgetId);
-        setResult(Activity.RESULT_OK, resultValue);
-        this.finish();
     }
 }
