@@ -24,10 +24,23 @@ import java.net.URL;
  */
 
 public class MyUtil
+
 {
+    /**
+     *
+     * @param string Obtiene un texto en formato de string
+     * @return El tamaño del string si este pasa de 100
+     */
     public static String stringLengthCut(String string) {
         return stringLengthCut(string, 100);
     }
+
+    /**
+     *
+     * @param string Una cadena de caracteres
+     * @param length La longitud maxima del texto
+     * @return
+     */
 
     public static String stringLengthCut(String string, int length) {
         string = string.trim();
@@ -35,6 +48,12 @@ public class MyUtil
                 string.substring(0, length - 2).trim()+"…"
                 : string.trim();
     }
+
+    /**
+     *
+     * @param context El contexto de Android
+     * @return Si el dispositivo esta conectado
+     */
     public boolean isOnline(Context context) {
         ConnectivityManager connMgr = (ConnectivityManager)
                 context.getSystemService(Context.CONNECTIVITY_SERVICE);
